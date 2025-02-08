@@ -1,40 +1,51 @@
 function updateClock() {
   const now = new Date();
+  const timezone = document.getElementById("timezone").value;
+  const format24Hour = JSON.parse(localStorage.getItem("format24Hour")) ?? true;
 
-  // Format time
-  let hours = now.getHours();
-  let minutes = now.getMinutes();
-  let seconds = now.getSeconds();
+  let options = {
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    hour12: !format24Hour,
+    timeZone:
+      timezone === "local"
+        ? Intl.DateTimeFormat().resolvedOptions().timeZone
+        : timezone,
+  };
 
-  // Add leading zero to minutes and seconds
-  hours = hours < 10 ? "0" + hours : hours;
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  seconds = seconds < 10 ? "0" + seconds : seconds;
-
-  // Update time display
-  const timeString = `${hours}:${minutes}:${seconds}`;
+  let timeString = new Intl.DateTimeFormat(undefined, options).format(now);
   document.getElementById("time").textContent = timeString;
 
-  // Format date
-  const options = {
+  let dateOptions = {
     weekday: "long",
     year: "numeric",
     month: "long",
     day: "numeric",
+    timeZone: options.timeZone,
   };
-  const dateString = now.toLocaleDateString(undefined, options);
-
-  // Update date display
-  document.getElementById("date").textContent = dateString;
+  document.getElementById("date").textContent = new Intl.DateTimeFormat(
+    undefined,
+    dateOptions
+  ).format(now);
 }
 
-// Theme switcher functionality
+// Handle Time Format Toggle
+const formatToggle = document.getElementById("format-toggle");
+formatToggle.addEventListener("click", () => {
+  let currentFormat = JSON.parse(localStorage.getItem("format24Hour")) ?? true;
+  localStorage.setItem("format24Hour", JSON.stringify(!currentFormat));
+  formatToggle.textContent = currentFormat
+    ? "Switch to 24-Hour Format"
+    : "Switch to 12-Hour Format";
+  updateClock();
+});
+
+// Handle Theme Toggle
 const themeToggle = document.getElementById("theme-toggle");
-let isDarkMode = true;
+let isDarkMode = JSON.parse(localStorage.getItem("darkMode")) ?? true;
 
-themeToggle.addEventListener("click", () => {
-  isDarkMode = !isDarkMode;
-
+function applyTheme() {
   if (isDarkMode) {
     document.body.style.backgroundColor = "#282c34";
     document.body.style.color = "white";
@@ -44,8 +55,18 @@ themeToggle.addEventListener("click", () => {
     document.body.style.color = "#282c34";
     themeToggle.textContent = "Switch to Dark Mode";
   }
+}
+
+themeToggle.addEventListener("click", () => {
+  isDarkMode = !isDarkMode;
+  localStorage.setItem("darkMode", JSON.stringify(isDarkMode));
+  applyTheme();
 });
 
-// Initialize clock
-setInterval(updateClock, 1000);
+// Handle Timezone Change
+document.getElementById("timezone").addEventListener("change", updateClock);
+
+// Auto Apply User Preferences
+applyTheme();
 updateClock();
+setInterval(updateClock, 1000);

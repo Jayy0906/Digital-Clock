@@ -1,33 +1,42 @@
 body {
+  background-color: #e6e6fa; /* Light Violet */
+  color: #4b0082; /* Indigo */
+  font-family: "Poppins", sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #282c34;
-  color: white;
   margin: 0;
-  font-family: "Arial", sans-serif;
 }
-
 .clock-container {
-  text-align: center;
-  border: 2px solid #61dafb;
+  background: rgba(255, 255, 255, 0.8);
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(97, 218, 251, 0.6);
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(75, 0, 130, 0.3);
 }
-
 .time {
   font-size: 4rem;
   font-weight: bold;
-  letter-spacing: 2px;
 }
-
 .date {
   font-size: 1.5rem;
   margin-top: 10px;
 }
-
-.theme-toggle {
-  margin-top: 20px;
+.custom-select,
+.custom-button {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.custom-button {
+  background-color: #8a2be2; /* Blue Violet */
+  color: white;
+  transition: 0.3s;
+}
+.custom-button:hover {
+  background-color: #6a1b9a; /* Darker Violet */
 }
